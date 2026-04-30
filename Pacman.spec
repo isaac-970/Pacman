@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_all
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path.cwd()
 
 datas = []
 binaries = []
