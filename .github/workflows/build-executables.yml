@@ -20,7 +20,7 @@ jobs:
         include:
           - os: windows-latest
             artifact_name: pacman-windows
-            artifact_path: dist/Pacman
+            artifact_path: dist/Pacman.exe
           - os: ubuntu-latest
             artifact_name: pacman-linux
             artifact_path: dist/Pacman
@@ -44,7 +44,7 @@ jobs:
       - name: Build executable
         run: python -m PyInstaller --noconfirm Pacman.spec
 
-      - name: Upload executable bundle
+      - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}

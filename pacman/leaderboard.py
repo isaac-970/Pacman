@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,8 +18,18 @@ except ImportError:  # pragma: no cover - depends on environment setup
     Client = Any
     create_client = None
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-PROJECT_ENV_FILE = PROJECT_ROOT / ".env"
+
+def _env_file_candidates() -> tuple[Path, ...]:
+    source_root = Path(__file__).resolve().parent.parent
+    executable_root = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else None
+    cwd_root = Path.cwd()
+
+    roots: list[Path] = []
+    for root in (executable_root, cwd_root, source_root):
+        if root is not None and root not in roots:
+            roots.append(root)
+
+    return tuple(root / ".env" for root in roots)
 
 
 @dataclass(slots=True)
@@ -45,7 +56,10 @@ class LeaderboardService:
 
     def _read_config(self) -> dict[str, str]:
         if load_dotenv is not None:
-            load_dotenv(PROJECT_ENV_FILE)
+            for env_file in _env_file_candidates():
+                if env_file.exists():
+                    load_dotenv(env_file)
+                    break
 
         if create_client is None:
             self.last_error = "Leaderboard unavailable: install supabase."
