@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from PyInstaller.utils.hooks import collect_all
-
-PROJECT_ROOT = Path(__file__).resolve().parent
 
 datas = []
 binaries = []
@@ -19,7 +15,7 @@ for package_name in ("pygame", "dotenv", "supabase"):
 
 a = Analysis(
     ["main.py"],
-    pathex=[str(PROJECT_ROOT)],
+    pathex=[SPECPATH],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
