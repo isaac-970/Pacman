@@ -6,7 +6,7 @@ datas = []
 binaries = []
 hiddenimports = []
 
-for package_name in ("pygame", "dotenv", "supabase"):
+for package_name in ("pygame", "dotenv", "supabase", "certifi", "httpx"):
     package_datas, package_binaries, package_hiddenimports = collect_all(package_name)
     datas += package_datas
     binaries += package_binaries

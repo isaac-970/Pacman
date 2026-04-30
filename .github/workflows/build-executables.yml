@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - copilot/fix-weird-music-bug
     paths:
       - ".github/workflows/build-executables.yml"
       - "Pacman.spec"

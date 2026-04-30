@@ -37,8 +37,8 @@ class AudioManager:
         self.apply_volume(self.volume)
 
     def _create_tone(self, frequency: float, duration_seconds: float, amplitude: float) -> pygame.mixer.Sound:
-        sample_rate = 22050
-        sample_count = max(1, int(sample_rate * duration_seconds))
+        mixer_frequency, _, mixer_channels = pygame.mixer.get_init()
+        sample_count = max(1, int(mixer_frequency * duration_seconds))
         samples = array("h")
         fade = max(1, sample_count // 12)
 
@@ -49,13 +49,13 @@ class AudioManager:
             elif index > sample_count - fade:
                 envelope = (sample_count - index) / fade
 
-            sample = amplitude * envelope * math.sin(2.0 * math.pi * frequency * index / sample_rate)
-            samples.append(int(max(-1.0, min(1.0, sample)) * 32767))
+            sample_value = int(max(-1.0, min(1.0, amplitude * envelope * math.sin(2.0 * math.pi * frequency * index / mixer_frequency))) * 32767)
+            for _ in range(mixer_channels):
+                samples.append(sample_value)
 
         return pygame.mixer.Sound(buffer=samples.tobytes())
 
     def _create_theme(self) -> pygame.mixer.Sound:
-        sample_rate = 22050
         sequence = [(440, 0.12), (554, 0.12), (659, 0.12), (880, 0.18), (659, 0.12), (554, 0.12), (440, 0.18)]
         samples = array("h")
 
