@@ -1,0 +1,2 @@
+"""Pacman pygame project."""
+
